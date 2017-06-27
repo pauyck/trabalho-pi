@@ -3,57 +3,97 @@
 
 // VARIAVEIS GLOBAIS
 
-// ESCOPO DAS FUN«’ES
+// ESCOPO DAS FUN√á√ïES DO MENU
 void menu();
 void menuGerenciarClientes();
 void menuGerenciarProdutos();
 void menuGerenciarPedidos();
 
+// FUN√á√ïES DO CLIENTE
+Cliente cadastrarCliente();
+void imprimirCliente(Cliente cliente);
+
+// FUN√á√ïES DO PRODUTO
+Produto cadastrarProduto();
+void imprimirProduto (Produto produto);
+
+// CADASTRO DE CLIENTE
+// DECLARA√á√ÉO DA ESTRUTURA
+typedef struct Endereco {
+	char logradouro[100];
+	char cep[8];
+	char bairro[30];
+	char cidade[30];
+	char estado[30];
+} Endereco;
+
+typedef struct Cliente {
+	int codigo;
+	char nome[100];
+	char cpf_cnpj[14];
+	char telefone[8];
+	Endereco enderecos[];
+} Cliente;
+
+
+typedef struct Produto {
+    int  codigo;
+    char nome[100];
+    char fornecedor[100];
+    char categoria;
+    int quantidade;
+    float valorUnitario;
+} Produto;
+
+
+Cliente cadastrarCliente();
+void imprimirCliente(Cliente cliente);
+
 int main (){
-	
-	// DECLARA«√O DAS VARIAVEIS LOCAIS
+
+	// DECLARA√á√ÉO DAS VARIAVEIS LOCAIS
 	char opcaoMenu;
-	
-	
+
+
 	// CRIANDO PONTEIRO PARA O ARQUIVO
 	FILE *arquivoDeDados;
-	
+
 	// CRIANDO O ARQUIVO E APONTANDO PARA O PONTEIRO
 	arquivoDeDados = fopen(	"arquivoDeDados.txt", "w+");
-	
+
 	if (arquivoDeDados!=NULL){
 			// IMPRIME NO ARQUIVO
 		    fputs ("fopen example",arquivoDeDados);
-		    
+
 			//FECHA O ARQUIVO
 		    fclose (arquivoDeDados);
 		}
 
-	// CHAMADA DA FUN«√O PARA IMPRIMIR O MENU
+	// CHAMADA DA FUN√á√ÉO PARA IMPRIMIR O MENU
 	menu();
-	
-	// LEITURA DAS OP«’ES DO MENU
-	
+
+	// LEITURA DAS OP√á√ïES DO MENU
+
 	scanf("%c", &opcaoMenu);
-	
-	// COMPARA«√O DAS OP«’ES DO MENU
+
+	// COMPARA√á√ÉO DAS OP√á√ïES DO MENU
 	if(opcaoMenu == 'c' || opcaoMenu == 'C'){
-		// CHAMA A FUN«√O PARA EXIBIR O MENU CORRESPONDENTE
+		// CHAMA A FUN√á√ÉO PARA EXIBIR O MENU CORRESPONDENTE
 		menuGerenciarClientes();
 	}
 	if(opcaoMenu == 'p' || opcaoMenu == 'P'){
-		// CHAMA A FUN«√O PARA EXIBIR O MENU CORRESPONDENTE
+		// CHAMA A FUN√á√ÉO PARA EXIBIR O MENU CORRESPONDENTE
 		menuGerenciarProdutos();
 	}
 	if(opcaoMenu == 'e' || opcaoMenu == 'E'){
-		// CHAMA A FUN«√O PARA EXIBIR O MENU CORRESPONDENTE
+		// CHAMA A FUN√á√ÉO PARA EXIBIR O MENU CORRESPONDENTE
 		menuGerenciarPedidos();
 	}
 	if(opcaoMenu == 's' || opcaoMenu == 's'){
 		return 0;
 	}
 	else{
-		printf("OpÁ„o inv·lida\nSaindo do sistema... \n");
+		printf("Op√ß√£o inv√°lida\nSaindo do sistema... \n");
 	}
 
 	system("pause");
@@ -61,7 +101,7 @@ int main (){
 }
 
 
-// FUN«√O MENU
+// FUN√á√ÉO MENU
 	void menu(){
 		printf("Digite um comando para prosseguir:\n");
 		printf("C - Gerenciar Clientes\n");
@@ -69,37 +109,91 @@ int main (){
 		printf("E - Gerenciar Pedidos\n");
 		printf("S - Sair\n\n");
 	}
-	
-// FUN«√O MENU GERENCIAR CLIENTES
+
+// FUN√á√ÉO MENU GERENCIAR CLIENTES
 	void menuGerenciarClientes(){
 		printf("============ Gerenciar Clientes ============\n");
 		printf("Digite um comando para prosseguir:\n");
 		printf("C - Cadastrar um cliente.\n");
 		printf("L - Listar todos os clientes cadastrados.\n");
-		printf("B - Buscar cliente j· cadastrado.\n");
+		printf("B - Buscar cliente j√° cadastrado.\n");
 		printf("A - Atualizar um cliente cadastrado.\n");
 		printf("E - Excluir um cliente cadastrado.\n");
 	}
-	
-// FUN«√O MENU GERENCIAR PRODUTOS
+
+// FUN√á√ÉO MENU GERENCIAR PRODUTOS
 	void menuGerenciarProdutos(){
 		printf("============== Gerenciar Produtos ==============\n");
 		printf("Digite um comando para prosseguir:\n");
 		printf("C - Cadastrar um produto.\n");
 		printf("L - Listar todos os produtos cadastrados.\n");
-		printf("B - Buscar produto j· cadastrado.\n");
+		printf("B - Buscar produto j√° cadastrado.\n");
 		printf("A - Atualizar um produto cadastrado.\n");
 		printf("E - Excluir um produto cadastrado.\n");
 		printf("S - Atualizar estoque de um produto.\n");
 	}
-	
-// FUN«√O MENU GERENCIAR PEDIDOS
+
+// FUN√á√ÉO MENU GERENCIAR PEDIDOS
 	void menuGerenciarPedidos(){
 		printf("============== Gerenciar Pedidos ==============\n");
 		printf("Digite um comando para prosseguir:\n");
-		printf("C ñ Cadastrar um pedido.\n");
-		printf("L ñ Listar todos os pedidos de um cliente.\n");
-		printf("D ñ Listar todos os pedidos em um dia especÌfico.\n");
+		printf("C ‚Äì Cadastrar um pedido.\n");
+		printf("L ‚Äì Listar todos os pedidos de um cliente.\n");
+		printf("D ‚Äì Listar todos os pedidos em um dia espec√≠fico.\n");
 	}
-	
-	
+
+// FUN√á√ÉO CADASTRAR CLIENTE
+    Cliente cadastrarCliente() {
+
+        Cliente cliente;
+        printf("Informe o c√≥digo do cliente:\n");
+        scanf(" %d", &cliente.codigo);
+        printf("Informe o nome do cliente:\n");
+        scanf(" %[^\n]s", cliente.nome);
+        printf("Informe o CPF ou CNPJ do cliente:\n");
+        scanf(" %[^\n]s", cliente.cpf_cnpj);
+        printf("Informe o telefone do cliente:\n");
+        scanf(" %[^\n]s", cliente.telefone);
+
+        return cliente;
+}
+// FUN√á√ÉO IMPRIMIR CLIENTE
+    void imprimirCliente(Cliente cliente) {
+
+        printf("C√≥digo: %d\n\n", cliente.codigo);
+        printf("Nome: %s\n", cliente.nome);
+        printf("CPF: %s\n", cliente.cpf_cnpj);
+        printf("E-mail: %s\n", cliente.telefone);
+        printf("Endere√ßo: %s\n", cliente.enderecos);
+}
+
+
+// FUN√á√ÉO CADASTRAR PRODUTO
+    Produto cadastrarProduto() {
+
+        Produto produto;
+        printf("Informe o c√≥digo do produto:\n");
+        scanf(" %d", &produto.codigo);
+        printf("Informe o nome do produto:\n");
+        scanf(" %[^\n]s", produto.nome);
+        printf("Informe o fornecedor:\n");
+        scanf(" %[^\n]s", produto.fornecedor);
+        printf("Informe a quantidade:\n");
+        scanf(" %d", produto.quantidade);
+        printf("Informe o valor unit√°rio do produto:\n");
+        scanf(" %f", produto.valorUnitario);
+
+        return produto;
+    }
+
+//  FUN√á√ÉO IMPRIMIR PRODUTO
+    void imprimirProduto(Produto Produto) {
+
+        printf("C√≥digo: %d\n\n", Produto.codigo);
+        printf("Nome: %s\n", produto.nome);
+        printf("Fornecedor: %s\n", produto.fornecedor);
+        printf("Quantidade; %d\n", produto.quantidade);
+        printf("Valor Unit√°rio: %.f\n", produto.valorUnitario);
+}
+    }
+
