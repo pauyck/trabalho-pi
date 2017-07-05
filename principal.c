@@ -81,7 +81,7 @@ int main (){
 				fclose(arquivo);
 				}
 			}
-			
+			 
 			if(opcaoMenu == 'p' || opcaoMenu == 'P'){
 				menuGerenciarProdutos();
 			}
