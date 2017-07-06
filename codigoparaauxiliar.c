@@ -23,6 +23,7 @@ struct cadastro
     struct pedido clientePed;
    
 }log[200];
+
 //AQUI DECLARO AS FUNÇÕES A SEREM USADAS
 int verifica_pos(void);
 int verifica_cod( int cod );
@@ -32,6 +33,7 @@ void list();
 void cadastroPedido();
 void consultaCod (void);
 void excluirCliente (void);
+
 int main(void){ //INICIO DO MAIN
 
     int i,Opcao,OpcaoCliente,posicao,retorno;
@@ -138,6 +140,7 @@ int main(void){ //INICIO DO MAIN
         }    while (Opcao != 8 || Opcao < 8);
 
 } // FIM DO MAIN
+
 void list(){ // Lista os usuarios cadastrados.
     int i,j;   
     for(i=0;i<200;i++){
@@ -150,6 +153,7 @@ void list(){ // Lista os usuarios cadastrados.
     system("cls");
 
 } //FIM DO LIST
+
 void cadastroP(int cod, int pos){ //Cadastro das pessoas
     int i;
     do{

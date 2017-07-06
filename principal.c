@@ -1,11 +1,14 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 // VARIAVEIS GLOBAIS
+#define TAMANHO_INICIAL 10
 
 // CADASTRO DE CLIENTE
 // DECLARA«√O DA ESTRUTURA
-typedef struct Endereco {
+typedef struct {
 	char logradouro[100];
 	char cep[8];
 	char bairro[30];
@@ -50,36 +53,23 @@ int main (){
 	// CRIANDO PONTEIRO PARA O ARQUIVO
 	FILE *arquivoDeDados;
 
-//	// CRIANDO O ARQUIVO E APONTANDO PARA O PONTEIRO
-//	arquivoDeDados = fopen(	"arquivoDeDados.txt", "w+");
-//
-//	if (arquivoDeDados!=NULL){
-//			// IMPRIME NO ARQUIVO
-//		    fputs ("fopen example",arquivoDeDados);
-//
-//			//FECHA O ARQUIVO
-//		    fclose (arquivoDeDados);
-//		}
-
 	menu();	
 	scanf("%c", &opcaoMenu);
 	
 	if(opcaoMenu == 'c' || opcaoMenu == 'C'){
 		char opcaoGerenciarClientes = menuGerenciarClientes();
 		
-			FILE *arquivo;
-			arquivo = fopen("arquivoDeDados.txt", "w+");
-			if(arquivo == NULL) {
+			arquivoDeDados = fopen("arquivoDeDados.txt", "w+");
+			if(arquivoDeDados == NULL) {
 				printf("N„o foi possÌvel abrir o arquivo.");
 				return 1;}
 				
 				if(opcaoGerenciarClientes == 'C' || opcaoGerenciarClientes == 'c') {	
-				Cliente cliente = cadastrarCliente();
-				fprintf(arquivoDeDados, "%d;%s;%s;%s;%s;%s;%s;%s;%s\n", cliente.codigo, cliente.nome, cliente.cpf_cnpj, cliente.telefone, 
-				cliente.enderecos.logradouro, cliente.enderecos.cep, cliente.enderecos.bairro, cliente.enderecos.cidade, cliente.enderecos.estado); 
-				
-				fclose(arquivo);
+					Cliente cliente = cadastrarCliente();
+					fprintf(arquivoDeDados, "%d;%s;%s;%s;%s;%s;%s;%s;%s\n", cliente.codigo, cliente.nome, cliente.cpf_cnpj, cliente.telefone, 
+					cliente.enderecos.logradouro, cliente.enderecos.cep, cliente.enderecos.bairro, cliente.enderecos.cidade, cliente.enderecos.estado); 
 				}
+			fclose(arquivoDeDados);
 			}
 			 
 			if(opcaoMenu == 'p' || opcaoMenu == 'P'){
@@ -92,7 +82,9 @@ int main (){
 				return 0;
 			}
 			else{
-				printf("Opcao invalida\nSaindo do sistema... \n");
+				printf("Opcao invalida\n\n");
+                system("cls");
+                main();
 			}
 
 	system("pause");
@@ -100,7 +92,7 @@ int main (){
 }
 
 
-// FUN√á√ÉO MENU
+// FUN«√O MENU
 void menu(){
 	printf("Digite um comando para prosseguir:\n");
 	printf("C - Gerenciar Clientes\n");
@@ -109,7 +101,7 @@ void menu(){
 	printf("S - Sair\n\n");
 }
 
-// FUN√á√ÉO MENU GERENCIAR CLIENTES
+// FUN«√O MENU GERENCIAR CLIENTES
 char menuGerenciarClientes(opcaoGerenciarClientes){
 	char opcaogerenciarclientes;
 	printf("============ Gerenciar Clientes ============\n");
@@ -145,10 +137,8 @@ void menuGerenciarPedidos(){
 }
 
 // FUN«√O CADASTRAR CLIENTE
-Cliente cadastrarCliente() {
-  
-  	Cliente cliente;
-    
+Cliente cadastrarCliente(Cliente c) {
+	Cliente cliente;
     printf("Informe o codigo do cliente:\n");
     scanf(" %d", &cliente.codigo);
     printf("Informe o nome do cliente:\n");
@@ -158,7 +148,7 @@ Cliente cadastrarCliente() {
     printf("Informe o telefone do cliente:\n");
     scanf(" %[^\n]s", cliente.telefone);
     
-    printf("Informe os dados do endereco\n");
+    printf("\nInforme os dados do endereco\n");
     printf("Logradouro:\n");
     scanf(" %[^\n]s", cliente.enderecos.logradouro);
     printf("CEP:\n");
@@ -170,9 +160,6 @@ Cliente cadastrarCliente() {
     printf("Estado:\n");
     scanf(" %[^\n]s", cliente.enderecos.estado);    
     
-    //	- No menu de cadastro do fornecedor, o sistema deve pedir para que o usu·rio informe os dados
-	//	de um cliente e o salve em arquivo	
-
     return cliente;
 }
 
