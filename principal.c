@@ -4,7 +4,8 @@
 #include <ctype.h>
 
 // VARIAVEIS GLOBAIS
-#define TAMANHO_INICIAL 10
+#define TAMANHO_INICIAL 20
+#define t 1024
 
 // CADASTRO DE CLIENTE
 // DECLARAÇÃO DA ESTRUTURA
@@ -17,7 +18,7 @@ typedef struct {
 } Endereco;
 
 typedef struct {
-	int codigo;
+	char codigo[25];
 	char nome[100];
 	char cpf_cnpj[14];
 	char telefone[8];
@@ -39,17 +40,18 @@ void menu();
 char menuGerenciarClientes();
 void menuGerenciarProdutos();
 void menuGerenciarPedidos();
-void imprimirCliente();
 void imprimirProduto();
-void imprimirCliente();
 
 // FUNÇÕES COM STRUCT
 Cliente cadastrarCliente();
+Cliente imprimirCliente(char*);
+
 
 int main (){
 	// DECLARAÇÃO DAS VARIAVEIS LOCAIS
 	char opcaoMenu;
-
+	char *linha = malloc(1024);
+	
 	// CRIANDO PONTEIRO PARA O ARQUIVO
 	FILE *arquivoDeDados;
 
@@ -58,34 +60,53 @@ int main (){
 	
 	if(opcaoMenu == 'c' || opcaoMenu == 'C'){
 		char opcaoGerenciarClientes = menuGerenciarClientes();
-		
-			arquivoDeDados = fopen("arquivoDeDados.txt", "w+");
+			
+		if(opcaoGerenciarClientes == 'C' || opcaoGerenciarClientes == 'c') {
+			// ABRE O ARQUIVO PARA ATUALIZACAO	
+			arquivoDeDados = fopen("arquivoDeDados.txt", "a+");
 			if(arquivoDeDados == NULL) {
 				printf("Não foi possível abrir o arquivo.");
 				return 1;}
 				
-				if(opcaoGerenciarClientes == 'C' || opcaoGerenciarClientes == 'c') {	
-					Cliente cliente = cadastrarCliente();
-					fprintf(arquivoDeDados, "%d;%s;%s;%s;%s;%s;%s;%s;%s\n", cliente.codigo, cliente.nome, cliente.cpf_cnpj, cliente.telefone, 
-					cliente.enderecos.logradouro, cliente.enderecos.cep, cliente.enderecos.bairro, cliente.enderecos.cidade, cliente.enderecos.estado); 
-				}
+			// CADASTRAR NO ARQUIVO
+			Cliente cliente = cadastrarCliente();
+			fprintf(arquivoDeDados, "%s;%s;%s;%s;%s;%s;%s;%s;%s\n", cliente.codigo, cliente.nome, cliente.cpf_cnpj, cliente.telefone, 
+			cliente.enderecos.logradouro, cliente.enderecos.cep, cliente.enderecos.bairro, cliente.enderecos.cidade, cliente.enderecos.estado); 
 			fclose(arquivoDeDados);
+		}
+		
+		if(opcaoGerenciarClientes == 'L' || opcaoGerenciarClientes == 'l') {	
+			// ABRE O ARQUIVO PARA ATUALIZACAO	
+			arquivoDeDados = fopen("arquivoDeDados.txt", "r+");
+			if(arquivoDeDados == NULL) {
+				printf("Não foi possível abrir o arquivo.");
+				return 1;
+				}
+			
+			// LE ARQUIVO E CHAMA A FUNCAO PARA IM
+			while(fgets(linha, t, arquivoDeDados) != EOF){
+				fscanf(arquivoDeDados, "%[^\n]s", linha);
+				imprimirCliente(linha);
 			}
+			
+			fclose(arquivoDeDados);
+		}
+	}
 			 
-			if(opcaoMenu == 'p' || opcaoMenu == 'P'){
-				menuGerenciarProdutos();
-			}
-			if(opcaoMenu == 'e' || opcaoMenu == 'E'){
-				menuGerenciarPedidos();
-			}
-			if(opcaoMenu == 's' || opcaoMenu == 's'){
-				return 0;
-			}
-			else{
-				printf("Opcao invalida\n\n");
-                system("cls");
-                main();
-			}
+	if(opcaoMenu == 'p' || opcaoMenu == 'P'){
+		menuGerenciarProdutos();
+	}
+	if(opcaoMenu == 'e' || opcaoMenu == 'E'){
+		menuGerenciarPedidos();
+	}
+	if(opcaoMenu == 's' || opcaoMenu == 's'){
+		return 0;
+	}
+	else{
+		printf("Opcao invalida\n\n");
+        system("cls");
+        main();
+	}
 
 	system("pause");
 	return 0;
@@ -140,7 +161,7 @@ void menuGerenciarPedidos(){
 Cliente cadastrarCliente(Cliente c) {
 	Cliente cliente;
     printf("Informe o codigo do cliente:\n");
-    scanf(" %d", &cliente.codigo);
+    scanf(" %[^\n]s", cliente.codigo);
     printf("Informe o nome do cliente:\n");
     scanf(" %[^\n]s", cliente.nome);
     printf("Informe o CPF ou CNPJ do cliente:\n");
@@ -165,14 +186,35 @@ Cliente cadastrarCliente(Cliente c) {
 
 
 // FUNÇÃO IMPRIMIR CLIENTE
-void imprimirCliente(Cliente cliente) {
-    printf("Codigo: %d\n\n", cliente.codigo);
-    printf("Nome: %s\n", cliente.nome);
-    printf("CPF: %s\n", cliente.cpf_cnpj);
-    printf("E-mail: %s\n", cliente.telefone);
-    printf("Endereco: %s\n", cliente.enderecos);
+Cliente imprimirCliente(char *linha) {
+	Cliente clienteimprimir;
+		strcpy(clienteimprimir.codigo, strtok(linha, ";"));
+		strcpy(clienteimprimir.nome, strtok(NULL, ";"));
+		strcpy(clienteimprimir.cpf_cnpj, strtok(NULL, ";"));
+		strcpy(clienteimprimir.telefone, strtok(NULL, ";"));
+		strcpy(clienteimprimir.enderecos.logradouro, strtok(NULL, ";"));
+		strcpy(clienteimprimir.enderecos.bairro, strtok(NULL, ";"));
+		strcpy(clienteimprimir.enderecos.cep, strtok(NULL, ";"));
+		strcpy(clienteimprimir.enderecos.cidade, strtok(NULL, ";"));
+		strcpy(clienteimprimir.enderecos.estado, strtok(NULL, ";"));
+		
+		
+		printf("Codigo: %s\n", clienteimprimir.codigo);
+	    printf("Nome: %s\n", clienteimprimir.nome);
+	    printf("CPF: %s\n", clienteimprimir.cpf_cnpj);
+	    printf("Telefone: %s\n", clienteimprimir.telefone);
+	    
+	    printf("Endereco: \nLogradouro: %s\n", clienteimprimir.enderecos.logradouro);
+	    printf("Bairro: %s\n", clienteimprimir.enderecos.bairro);
+	    printf("CEP: %s\n", clienteimprimir.enderecos.cep);
+	    printf("Cidade: %s\n", clienteimprimir.enderecos.cidade);
+	    printf("Estado: %s\n\n", clienteimprimir.enderecos.estado);
+	
+	//pessoa1.genero = *strtok(NULL, ";");
+	//char *idade = strtok(NULL, ";");
+	
+	return clienteimprimir;
 }
-
 
 // FUNÇÃO CADASTRAR PRODUTO
 cadProduto cadastrarProduto() {
@@ -191,10 +233,11 @@ cadProduto cadastrarProduto() {
     return produto;
 }
 
+
 //  FUNÇÃO IMPRIMIR PRODUTO
-    void imprimirProduto(cadProduto Produto) {
+void imprimirProduto(char *linha) {
 		cadProduto imprimeprod;
-        printf("Codigo: %d\n\n", imprimeprod.codigo);
+        printf("Codigo: %s\n", imprimeprod.codigo);
         printf("Nome: %s\n", imprimeprod.nome);
         printf("Fornecedor: %s\n", imprimeprod.fornecedor);
         printf("Quantidade; %d\n", imprimeprod.quantidade);
